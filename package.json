@@ -1,0 +1,28 @@
+{
+  "name": "@toth/interfaz",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "postinstall": "node scripts/copy-pdf-worker.mjs",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^14.2.5",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "pdfjs-dist": "^4.4.168",
+    "@toth/ingesta": "file:../toth-ingesta",
+    "@toth/extraccion": "file:../toth-extraccion",
+    "@toth/abstractivo": "file:../toth-abstractivo",
+    "@toth/productos": "file:../toth-productos",
+    "@toth/compositor": "file:../toth-compositor"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "typescript": "^5.4.5"
+  }
+}
