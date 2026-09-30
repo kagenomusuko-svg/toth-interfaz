@@ -10,6 +10,9 @@ const candidates = [
   resolve(root, 'node_modules/pdfjs-dist/build/pdf.worker.min.mjs'),
   resolve(root, 'node_modules/pdfjs-dist/build/pdf.worker.mjs'),
   resolve(root, 'node_modules/pdfjs-dist/build/pdf.worker.min.js'),
+  // fallback: toth-ingesta's own node_modules (cuando no hubo hoisting)
+  resolve(root, '../toth-ingesta/node_modules/pdfjs-dist/build/pdf.worker.min.mjs'),
+  resolve(root, '../toth-ingesta/node_modules/pdfjs-dist/build/pdf.worker.mjs'),
 ];
 
 mkdirSync(publicDir, { recursive: true });

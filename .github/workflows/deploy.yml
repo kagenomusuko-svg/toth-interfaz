@@ -1,0 +1,110 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main, claude/tender-cannon-58r614]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout toth-interfaz
+        uses: actions/checkout@v4
+        with:
+          path: toth-interfaz
+
+      - name: Checkout toth-ingesta
+        uses: actions/checkout@v4
+        with:
+          repository: kagenomusuko-svg/toth-ingesta
+          ref: claude/tender-cannon-58r614
+          path: toth-ingesta
+
+      - name: Checkout toth-extraccion
+        uses: actions/checkout@v4
+        with:
+          repository: kagenomusuko-svg/toth-extraccion
+          ref: claude/tender-cannon-58r614
+          path: toth-extraccion
+
+      - name: Checkout toth-abstractivo
+        uses: actions/checkout@v4
+        with:
+          repository: kagenomusuko-svg/toth-abstractivo
+          ref: claude/tender-cannon-58r614
+          path: toth-abstractivo
+
+      - name: Checkout toth-productos
+        uses: actions/checkout@v4
+        with:
+          repository: kagenomusuko-svg/toth-productos
+          ref: claude/tender-cannon-58r614
+          path: toth-productos
+
+      - name: Checkout toth-comparativo
+        uses: actions/checkout@v4
+        with:
+          repository: kagenomusuko-svg/toth-comparativo
+          ref: claude/tender-cannon-58r614
+          path: toth-comparativo
+
+      - name: Checkout toth-compositor
+        uses: actions/checkout@v4
+        with:
+          repository: kagenomusuko-svg/toth-compositor
+          ref: claude/tender-cannon-58r614
+          path: toth-compositor
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: toth-interfaz/package-lock.json
+
+      - name: Build toth-* packages
+        run: |
+          for pkg in toth-ingesta toth-extraccion toth-abstractivo toth-productos toth-comparativo toth-compositor; do
+            echo "=== Building $pkg ==="
+            cd "$pkg"
+            npm install
+            npm run build
+            cd ..
+          done
+
+      - name: Build toth-interfaz
+        working-directory: toth-interfaz
+        env:
+          NEXT_PUBLIC_BASE_PATH: /toth-interfaz
+        run: |
+          npm install
+          npm run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: toth-interfaz/out
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

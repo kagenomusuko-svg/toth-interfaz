@@ -32,8 +32,9 @@ export async function runPipeline(
 
   // Ingesta
   onStep('ingesta');
+  const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
   const pdfResult = await extractPdfText(arrayBuffer, {
-    workerSrc: '/pdf.worker.min.mjs',
+    workerSrc: `${basePath}/pdf.worker.min.mjs`,
   });
 
   const { sourceDocument } = await normalizeDocument({

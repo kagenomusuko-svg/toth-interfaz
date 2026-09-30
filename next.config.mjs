@@ -1,6 +1,9 @@
-
+const basePath = process.env.NEXT_PUBLIC_BASE_PATH ?? '';
 
 const nextConfig = {
+  output: 'export',
+  basePath,
+  assetPrefix: basePath,
   transpilePackages: [
     '@toth/ingesta',
     '@toth/extraccion',
@@ -9,7 +12,6 @@ const nextConfig = {
     '@toth/compositor',
   ],
   webpack: (config) => {
-    // pdfjs-dist canvas mock para entornos sin canvas
     config.resolve.alias = {
       ...config.resolve.alias,
       canvas: false,
